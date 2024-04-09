@@ -1,0 +1,45 @@
+* {
+    font-size: 62.5%;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 500;
+    font-style: normal;
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+.game {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    height: 100vh;
+}
+
+.grid {
+    background-color: rgb(187, 173, 160);
+    border-radius: 0.5rem;
+    padding: 0.5rem;
+    transition: all .5s;
+}
+
+.grid__row {
+    display: flex;
+}
+
+.grid__cell {
+    width: 10rem;
+    height: 10rem;
+    background-color: rgba(238,228,218,.35);
+    margin: 0.5rem;
+    border-radius: 0.5rem;
+}
+
+.tile {
+    position: absolute;
+    width: 10rem;
+    height: 10rem;
+    background-color: black;
+    border-radius: 0.5rem;
+    transition: all .5s;
+}
