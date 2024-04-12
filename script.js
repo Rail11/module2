@@ -2,6 +2,22 @@ document.addEventListener('DOMContentLoaded', function () {
     'use strict';
 
     function startGame(gridSize) {
+        let tilesArray = createTilesArray();
+
+        // Создание массива для хранения значений плиток.
+        function createTilesArray() {
+            let tilesArray = [];
+
+            for (let i = 0; i < gridSize; i++) {
+                tilesArray.push([]);
+                for (let j = 0; j < gridSize; j++) {
+                    tilesArray[i].push(0);
+                }
+            }
+            return tilesArray;
+        }
+
+        // Создание вёрстки клеток исходя из gridSize.
         function createGrid() {
             let grid = document.querySelector('.grid');
 
@@ -23,64 +39,86 @@ document.addEventListener('DOMContentLoaded', function () {
         }
         createGrid();
 
-        function getTilePos() {
+        // Получение случайного числа в диапозоне от 0 до указаного в gridSize.
+        function getRandomNum() {
             return Math.floor(Math.random() * gridSize);
         }
 
+        // Получение значения числа 2 или 4.
         function get2or4() {
-            let tileVal = 0,
+            let tileValue = 0,
                 randomNum = Math.floor(Math.random() * 100) + 1;
+
             if (randomNum <= 90) {
-                tileVal = 2;
+                tileValue = 2;
             } else {
-                tileVal = 4;
+                tileValue = 4;
             }
-            return tileVal;
+            return tileValue;
         }
 
-        function createTilesArr() {
-            let tilesArr = [];
-                
-            for (let i = 0; i < gridSize; i++) {
-                tilesArr.push([]);
-                for (let j = 0; j < gridSize; j++) {
-                    tilesArr[i].push(0);
-                }
-            }
-            return tilesArr;
-        }
-        let tilesArr = createTilesArr();
-
-        function createTileInArr() {
-            let x = getTilePos(),
-                y = getTilePos(),
-                val = get2or4();
-            console.log(x, y);
-            tilesArr[x][y] = val;
-        }
-        createTileInArr();
-        
-        console.log(tilesArr);
-
-        function getCellPos() {
-            let cell = document.querySelectorAll('.grid__cell')[7],
-                cellPosX = cell.offsetLeft,
-                cellPosY = cell.offsetTop;
-
-            return {cellPosX, cellPosY};
-        }
-
-        function addTileToGrid() {
+        // Добавление плитки в вёрстку по позиции клетки.
+        function addTileToGrid(position, value) {
             let tile = document.createElement('div'),
-                grid = document.querySelector('.grid');
+                grid = document.querySelector('.grid'),
+                tileInGridPosX = position.cellPosX,
+                tileInGridPosY = position.cellPosY;
 
             tile.classList.add('tile');
-            tile.style.left = `${getCellPos().cellPosX}px`;
-            tile.style.top = `${getCellPos().cellPosY}px`;
+            if (value === 2) {
+                tile.classList.add('tile-2');
+            } else if (value === 4) {
+                tile.classList.add('tile-4');
+            }
+            tile.style.left = `${tileInGridPosX}px`;
+            tile.style.top = `${tileInGridPosY}px`;
+            tile.textContent = `${value}`;
             grid.append(tile);
         }
 
-        addTileToGrid();
+        // Получение позиции клетки, где будет потом расположена плитка.
+        function getCellPos(x, y) {
+            // Получение номера клетки, где будет расположена плитка.
+            let cellNum = x * gridSize + y;
+            // Получение клетки и его положения, где будет расположена плитка. 
+            let cell = document.querySelectorAll('.grid__cell')[`${cellNum}`],
+                cellPosX = cell.offsetLeft,
+                cellPosY = cell.offsetTop;
+
+            return {
+                cellPosX,
+                cellPosY
+            };
+        }
+
+        // Добавление значения плитки в массив.
+        function addTileInArray() {
+            let tileInArrayPosX = getRandomNum(),
+                tileInArrayPosY = getRandomNum(),
+                tileValue = get2or4();
+            // Генериуем координаты в массиве и если в этих координатах что то есть то тогда генерируем новые числа где будет в массиве ноль.
+            // Написать условия что если в массиве в этом месте значение равно 0 то тогда добавляем новое значени, в другом случае ебашим циклом пока генерируем новые цифры пока не найдем координаты с числом равным 0.
+            tilesArray[tileInArrayPosX][tileInArrayPosY] = tileValue;
+
+            return {tileInArrayPosX, tileInArrayPosY, tileValue};
+        }
+
+        // Создание плитки в массиве и его добавление в клетку.
+        function createTile() {
+            let tileInArray = addTileInArray(),
+                tileInArrayPosX = tileInArray.tileInArrayPosX,
+                tileInArrayPosY = tileInArray.tileInArrayPosY,
+                tileValue = tileInArray.tileValue;
+
+            addTileToGrid(getCellPos(tileInArrayPosX, tileInArrayPosY), tileValue);
+        }
+        createTile();
+        
+        console.log(tilesArray);
+
+        // добавление передвижений плитки
+        // добавление складываения плиток в зависимости от напрвлений передвижения
+
     }
     startGame(5);
 });

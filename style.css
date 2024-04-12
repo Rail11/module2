@@ -17,6 +17,7 @@
 }
 
 .grid {
+    position: relative;
     background-color: rgb(187, 173, 160);
     border-radius: 0.5rem;
     padding: 0.5rem;
@@ -37,9 +38,23 @@
 
 .tile {
     position: absolute;
+    text-align: center;
+    line-height: 10rem;
     width: 10rem;
     height: 10rem;
-    background-color: black;
     border-radius: 0.5rem;
+}
+
+.tile-2 {
+    font-size: 5rem;
+    color: #776e65;
+    background-color: #eee4da;
+    transition: all .5s;
+}
+
+.tile-4 {
+    font-size: 5rem;
+    color: #776e65;
+    background-color: #eee1c9;
     transition: all .5s;
 }
