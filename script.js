@@ -57,6 +57,20 @@ document.addEventListener('DOMContentLoaded', function () {
             return tileValue;
         }
 
+        // Проверка есть ли место в массиве для хранения значений плиток.
+        function checkEmptyTileInTilesArray(array) {
+            let result = false;
+            for (let i = 0; i < array.length; i++) {
+                for (let j = 0; j < array.length; j++) {
+                    if (array[i][j] == 0) {
+                        result = true;
+                        break;
+                    }
+                }
+            }
+            return result;
+        }
+
         // Добавление плитки в вёрстку по позиции клетки.
         function addTileToGrid(position, value) {
             let tile = document.createElement('div'),
@@ -93,32 +107,50 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // Добавление значения плитки в массив.
         function addTileInArray() {
-            let tileInArrayPosX = getRandomNum(),
-                tileInArrayPosY = getRandomNum(),
-                tileValue = get2or4();
-            // Генериуем координаты в массиве и если в этих координатах что то есть то тогда генерируем новые числа где будет в массиве ноль.
-            // Написать условия что если в массиве в этом месте значение равно 0 то тогда добавляем новое значени, в другом случае ебашим циклом пока генерируем новые цифры пока не найдем координаты с числом равным 0.
-            tilesArray[tileInArrayPosX][tileInArrayPosY] = tileValue;
+            if (checkEmptyTileInTilesArray(tilesArray)) {
+                let tileInArrayPosX = getRandomNum(),
+                    tileInArrayPosY = getRandomNum(),
+                    tileValue = get2or4();
+                do {
+                    tileInArrayPosX = getRandomNum();
+                    tileInArrayPosY = getRandomNum();
+                } while (tilesArray[tileInArrayPosX][tileInArrayPosY] != 0);
 
-            return {tileInArrayPosX, tileInArrayPosY, tileValue};
+                tilesArray[tileInArrayPosX][tileInArrayPosY] = tileValue;
+
+                return {
+                    tileInArrayPosX,
+                    tileInArrayPosY,
+                    tileValue
+                };
+            } else {
+                return false;
+            }
         }
 
         // Создание плитки в массиве и его добавление в клетку.
         function createTile() {
-            let tileInArray = addTileInArray(),
-                tileInArrayPosX = tileInArray.tileInArrayPosX,
-                tileInArrayPosY = tileInArray.tileInArrayPosY,
-                tileValue = tileInArray.tileValue;
-
-            addTileToGrid(getCellPos(tileInArrayPosX, tileInArrayPosY), tileValue);
+            let tileInArray = addTileInArray();
+            if (tileInArray != false) {
+                let tileInArrayPosX = tileInArray.tileInArrayPosX,
+                    tileInArrayPosY = tileInArray.tileInArrayPosY,
+                    tileValue = tileInArray.tileValue;
+                addTileToGrid(getCellPos(tileInArrayPosX, tileInArrayPosY), tileValue);
+            } else {
+                alert('GAME OVER');
+            }
         }
         createTile();
-        
+        createTile();
+
+        document.addEventListener(`keydown`, (e) => {
+            if (e.code == `ArrowRight`) {
+                createTile();
+            }
+        });
         console.log(tilesArray);
-
         // добавление передвижений плитки
-        // добавление складываения плиток в зависимости от напрвлений передвижения
-
+        // добавление складываения плиток в зависимости от направлений передвижения
     }
     startGame(5);
 });
